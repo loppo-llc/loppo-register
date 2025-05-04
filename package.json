@@ -1,0 +1,21 @@
+{
+  "name": "loppo-register-api",
+  "version": "0.1.0",
+  "description": "Square APIを使用したセルフレジシステム",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "install-client": "cd client && npm install"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "square": "^42.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "license": "MIT"
+}
