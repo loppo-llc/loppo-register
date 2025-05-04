@@ -21,7 +21,7 @@ LOPPO Registerは、Square APIを活用した無人販売所向けのセルフ�
 
 **このシステムを本番環境で使用する前に必ず以下の対策を行ってください。**
 
-1. **プライベートVPNの構築**：
+1. **VPNの構築**：
    - このシステムは初期状態では通信が保護されません
    - 各サーバーとキオスク端末間の通信を保護するため、Tailscaleなどでプライベートネットワークを構築することを強く推奨します
 
@@ -62,7 +62,7 @@ LOPPO Registerは、Square APIを活用した無人販売所向けのセルフ�
 
 ```bash
 # リポジトリをクローン
-git clone https://github.com/yourusername/loppo-register.git
+git clone https://github.com/loppo-llc/loppo-register.git
 cd loppo-register
 
 # 環境設定ファイルを作成
@@ -115,13 +115,13 @@ npm run dev
 ## トラブルシューティング
 
 **Q: Square Terminalが応答しない**  
-A: Terminalの電源をON/OFFし、ネットワーク接続を確認してください。
+A: デバイスIDが正しいことを確認してください。Terminalの電源をON/OFFし、ネットワーク接続を確認してください。
 
 **Q: 決済が失敗する**  
 A: Square Terminalのステータスを確認し、必要に応じて再起動してください。
 
 **Q: システムが応答しない**  
-A: クライアント端末とサーバーを再起動し、VPN接続を確認してください。
+A: アプリケーションが起動しているサーバーのローカルIPアドレスを確認してください。クライアント端末とサーバーを再起動し、VPN接続を確認してください。
 
 ## カスタマイズ
 
@@ -140,7 +140,7 @@ A: クライアント端末とサーバーを再起動し、VPN接続を確認�
 ## 関連リンク
 
 - [Square開発者ドキュメント](https://developer.squareup.com/docs)
-- [セルフレジシステム開発ブログ記事](https://blog.loppo.co.jp/full-self-checkout-system/)
+- [セルフレジシステムの開発ブログ記事](https://blog.loppo.co.jp/full-self-checkout-system/)
 
 ## サポート
 
