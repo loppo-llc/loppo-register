@@ -21,6 +21,9 @@ const NODE_ENV = process.env.NODE_ENV || "production";
 const SQUARE_ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN;
 const SQUARE_LOCATION_ID = process.env.SQUARE_LOCATION_ID;
 const SQUARE_DEVICE_ID = process.env.SQUARE_DEVICE_ID;
+const SQUARE_CATEGORY_FILTER = process.env.SQUARE_CATEGORY_FILTER
+  ? process.env.SQUARE_CATEGORY_FILTER.split(',').map(cat => cat.trim())
+  : null;
 
 // Square クライアント初期化
 const squareClient = new SquareClient({
@@ -73,8 +76,8 @@ app.post("/api/create-terminal-checkout", async (req, res) => {
         },
         referenceId: orderId,
         orderId,
-        note: "セルフレジでの決済",
-        paymentType: paymentType
+        paymentType,
+        note: "セルフレジでの決済"
       },
     });
 
@@ -147,7 +150,7 @@ app.get("/api/catalog-items", async (_req, res) => {
     //------------------------------------------------------------------
     // ③ ITEM を展開し、先に作ったマップで情報を埋め込む
     //------------------------------------------------------------------
-    const filtered = objects
+    let filtered = objects
       .filter((o) => o.type === "ITEM")
       .map((item) => {
         const d = item.itemData ?? {};
@@ -171,12 +174,17 @@ app.get("/api/catalog-items", async (_req, res) => {
           updatedAt: item.updatedAt,
         };
       })
-      // -- ここで要件フィルタ --
-      .filter(
-        (item) =>
-          !item.isArchived &&
-          item.categoryNames.includes("六方画材")
+      // -- 非アーカイブのみ対象 --
+      .filter(item => !item.isArchived);
+      
+    // 環境変数でカテゴリーフィルターが指定されている場合のみフィルター適用
+    if (SQUARE_CATEGORY_FILTER && SQUARE_CATEGORY_FILTER.length > 0) {
+      filtered = filtered.filter(item => 
+        SQUARE_CATEGORY_FILTER.some(category => 
+          item.categoryNames.includes(category)
+        )
       );
+    }
 
     res.json(filtered);
   } catch (error) {

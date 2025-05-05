@@ -12,7 +12,7 @@ LOPPO Registerは、Square APIを活用した無人販売所向けのセルフ�
 ### 主な特徴
 
 - **完全キャッシュレス**：クレジットカード、交通系IC、iD、QUICPay、QRコード決済に対応
-- **マルチ言語対応**：日本語、英語、フランス語、スペイン語、繁体字中国語、簡体字中国語の6言語
+- **マルチ言語対応**：日本語、英語、フランス語、スペイン語、繁体字中国語、簡体字中国語、韓国語の7言語
 - **シンプルなインターフェース**：直感的な操作で客層を選ばず使いやすい
 - **低コスト運用**：月額固定費なし（決済手数料のみ）、Square Terminalのみで運用可能
 - **リモート管理**：商品管理やデータ分析がSquareダッシュボードから可能
@@ -77,6 +77,9 @@ cp .env.sample .env
 SQUARE_ACCESS_TOKEN=your_square_access_token
 SQUARE_LOCATION_ID=your_square_location_id
 SQUARE_DEVICE_ID=your_square_terminal_device_id
+
+# 商品カテゴリーフィルター設定
+SQUARE_CATEGORY_FILTER=
 
 # サーバー設定
 PORT=3000

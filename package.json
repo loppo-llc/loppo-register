@@ -1,7 +1,7 @@
 {
   "name": "loppo-register-api",
-  "version": "0.1.0",
-  "description": "Square APIを使用したセルフレジシステム",
+  "version": "0.2.0",
+  "description": "Square APIベースの完全キャッシュレスPOSシステム",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

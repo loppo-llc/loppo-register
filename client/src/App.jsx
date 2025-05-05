@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ShoppingCart, Trash2, Plus, Minus, CreditCard, Package, RefreshCw } from 'lucide-react';
+import { ShoppingCart, Trash2, Plus, Minus, CreditCard, Package, RefreshCw, FileText } from 'lucide-react';
+import LicenseScreen from './LicenseScreen';
 
 // 言語設定
 const translations = {
@@ -42,7 +43,15 @@ const translations = {
     paymentCanceled: '決済がキャンセルされました。',
     processing: '決済処理中...',
     statusCheckFailed: '決済状況の確認に失敗しました',
-    errorDuringPayment: '決済処理中にエラーが発生しました'
+    errorDuringPayment: '決済処理中にエラーが発生しました',
+    licenseInfo: 'ライセンス情報',
+    licenseTitle: 'オープンソースライセンス',
+    licenseDescription: 'このアプリケーションは以下のオープンソースライブラリを使用しています：',
+    version: 'バージョン',
+    license: 'ライセンス',
+    showFullLicense: 'ライセンス全文を表示',
+    hideLicense: '閉じる',
+    close: '閉じる'
   },
   en: {
     title: 'Self-Checkout System',
@@ -83,7 +92,15 @@ const translations = {
     paymentCanceled: 'Payment canceled.',
     processing: 'Processing payment...',
     statusCheckFailed: 'Failed to check payment status',
-    errorDuringPayment: 'Error occurred during payment process'
+    errorDuringPayment: 'Error occurred during payment process',
+    licenseInfo: 'License Information',
+    licenseTitle: 'Open Source Licenses',
+    licenseDescription: 'This application uses the following open source libraries:',
+    version: 'Version',
+    license: 'License',
+    showFullLicense: 'Show Full License',
+    hideLicense: 'Hide',
+    close: 'Close'
   },
   fr: {
     title: 'Système de Caisse Automatique',
@@ -124,7 +141,15 @@ const translations = {
     paymentCanceled: 'Paiement annulé.',
     processing: 'Traitement du paiement...',
     statusCheckFailed: 'Échec de la vérification du statut de paiement',
-    errorDuringPayment: 'Une erreur s\'est produite pendant le processus de paiement'
+    errorDuringPayment: 'Une erreur s\'est produite pendant le processus de paiement',
+    licenseInfo: 'Informations de Licence',
+    licenseTitle: 'Licences Open Source',
+    licenseDescription: 'Cette application utilise les bibliothèques open source suivantes :',
+    version: 'Version',
+    license: 'Licence',
+    showFullLicense: 'Afficher la licence complète',
+    hideLicense: 'Masquer',
+    close: 'Fermer'
   },
   es: {
     title: 'Sistema de Autoservicio',
@@ -165,7 +190,15 @@ const translations = {
     paymentCanceled: 'Pago cancelado.',
     processing: 'Procesando pago...',
     statusCheckFailed: 'Error al verificar el estado del pago',
-    errorDuringPayment: 'Se produjo un error durante el proceso de pago'
+    errorDuringPayment: 'Se produjo un error durante el proceso de pago',
+    licenseInfo: 'Información de Licencia',
+    licenseTitle: 'Licencias de Código Abierto',
+    licenseDescription: 'Esta aplicación utiliza las siguientes bibliotecas de código abierto:',
+    version: 'Versión',
+    license: 'Licencia',
+    showFullLicense: 'Mostrar licencia completa',
+    hideLicense: 'Ocultar',
+    close: 'Cerrar'
   },
   zh_hant: {
     title: '自助結帳系統',
@@ -206,7 +239,15 @@ const translations = {
     paymentCanceled: '支付已取消。',
     processing: '正在處理支付...',
     statusCheckFailed: '檢查支付狀態失敗',
-    errorDuringPayment: '支付過程中發生錯誤'
+    errorDuringPayment: '支付過程中發生錯誤',
+    licenseInfo: '授權資訊',
+    licenseTitle: '開源授權',
+    licenseDescription: '本應用程式使用了以下開源庫：',
+    version: '版本',
+    license: '授權',
+    showFullLicense: '顯示完整授權',
+    hideLicense: '隱藏',
+    close: '關閉'
   },
   zh_hans: {
     title: '自助结账系统',
@@ -247,7 +288,64 @@ const translations = {
     paymentCanceled: '支付已取消。',
     processing: '正在处理支付...',
     statusCheckFailed: '检查支付状态失败',
-    errorDuringPayment: '支付过程中发生错误'
+    errorDuringPayment: '支付过程中发生错误',
+    licenseInfo: '许可证信息',
+    licenseTitle: '开源许可证',
+    licenseDescription: '本应用程序使用了以下开源库：',
+    version: '版本',
+    license: '许可证',
+    showFullLicense: '显示完整许可证',
+    hideLicense: '隐藏',
+    close: '关闭'
+  },
+  ko: {
+    title: '셀프 계산대 시스템',
+    scanTitle: '상품 스캔',
+    scanDescription: '구매하려는 상품의 바코드를 바코드 스캐너로 스캔해 주세요',
+    scanPlaceholder: '바코드 스캔 또는 입력',
+    addButton: '추가',
+    manualAddTitle: '수동 상품 추가:',
+    loading: '로딩 중...',
+    loadingComplete: '상품 데이터 로드 완료',
+    cartTitle: '장바구니',
+    emptyCart: '장바구니가 비어 있습니다',
+    total: '합계',
+    proceedToCheckout: '결제 진행',
+    selectPayment: '결제 방법 선택',
+    creditDebit: '신용/체크 카드',
+    transitIC: '교통 IC 카드',
+    id: 'iD',
+    quicpay: 'QUICPay',
+    qrCode: 'QR코드 결제',
+    cancel: '취소',
+    cardInstruction: '결제 단말기에 카드를 삽입하거나 터치해 주세요',
+    transitInstruction: '결제 단말기에 교통 IC 카드나 스마트폰을 터치해 주세요',
+    idInstruction: '결제 단말기에 iD 호환 카드나 스마트폰을 터치해 주세요',
+    quicpayInstruction: '결제 단말기에 QUICPay 호환 카드나 스마트폰을 터치해 주세요',
+    qrInstruction: '스마트폰으로 결제 단말기에 표시된 QR코드를 스캔해 주세요',
+    paymentComplete: '결제 완료!',
+    receiptPrinted: '영수증이 인쇄되었습니다. 구매해 주셔서 감사합니다.',
+    startNewShopping: '새 쇼핑 시작',
+    addedToCart: '"{name}" 장바구니에 추가됨',
+    itemNotFound: '상품을 찾을 수 없습니다',
+    emptyCartMessage: '장바구니를 비웠습니다',
+    noItemsInCart: '장바구니에 상품이 없습니다',
+    processingPayment: '결제 과정을 시작합니다...',
+    pleasePayAtTerminal: '단말기에서 결제해 주세요...',
+    paymentCompleted: '결제가 완료되었습니다! 영수증을 인쇄 중...',
+    paymentFailed: '결제 실패. 다시 시도해 주세요.',
+    paymentCanceled: '결제가 취소되었습니다.',
+    processing: '결제 처리 중...',
+    statusCheckFailed: '결제 상태 확인 실패',
+    errorDuringPayment: '결제 과정 중 오류가 발생했습니다',
+    licenseInfo: '라이선스 정보',
+    licenseTitle: '오픈소스 라이선스',
+    licenseDescription: '이 응용 프로그램은 다음 오픈소스 라이브러리를 사용합니다:',
+    version: '버전',
+    license: '라이선스',
+    showFullLicense: '전체 라이선스 보기',
+    hideLicense: '숨기기',
+    close: '닫기'
   }
 };
 
@@ -258,7 +356,8 @@ const languageOptions = [
   { code: 'fr', name: 'Français' },
   { code: 'es', name: 'Español' },
   { code: 'zh_hant', name: '繁體中文' },
-  { code: 'zh_hans', name: '简体中文' }
+  { code: 'zh_hans', name: '简体中文' },
+  { code: 'ko', name: '한국어' }
 ];
 
 // メインアプリケーション
@@ -273,6 +372,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState(null); // 決済手段選択用の状態
+  const [showLicenseInfo, setShowLicenseInfo] = useState(false);
   const [language, setLanguage] = useState('ja'); // デフォルト言語を日本語に設定
   const inputRef = useRef(null);
 
@@ -638,6 +738,17 @@ const App = () => {
       <header className="bg-blue-600 text-white p-4 shadow-md">
         <div className="max-w-[1800px] w-full mx-auto flex justify-between items-center">
           <h1 className="text-4xl font-bold">{t.title}</h1>
+          
+          {/* ライセンス情報ボタン */}
+          <button
+            onClick={() => setShowLicenseInfo(true)}
+            className="flex items-center gap-1 px-3 py-1.5 rounded bg-blue-700 hover:bg-blue-800 text-white text-sm transition-colors"
+            aria-label={t.licenseInfo}
+            title={t.licenseInfo}
+          >
+            <FileText size={16} />
+            <span className="hidden sm:inline">{t.licenseInfo}</span>
+          </button>
         </div>
       </header>
 
@@ -934,7 +1045,7 @@ const App = () => {
       {/* フッター */}
       <footer className="bg-gray-800 text-white py-8">
         <div className="max-w-[1800px] mx-auto px-4">
-          {/* 言語選択部分 - バリバリ目立つスタイル */}
+          {/* 言語選択 */}
           <div className="flex flex-col items-center">
             <div className="flex gap-3 flex-wrap justify-center">
               {languageOptions.map(option => (
@@ -954,6 +1065,14 @@ const App = () => {
           </div>
         </div>
       </footer>
+      
+      {/* ライセンス情報モーダル */}
+      {showLicenseInfo && (
+        <LicenseScreen
+          onClose={() => setShowLicenseInfo(false)}
+          translations={t}
+        />
+      )}
     </div>
   );
 };
