@@ -293,6 +293,6 @@ function handleError(label, err, res) {
 // -----------------------------------------------------------------------------
 // サーバー起動
 // -----------------------------------------------------------------------------
-app.listen(PORT, () => {
+app.listen(PORT, process.env.HOST || "0.0.0.0", () => {
   console.log(`🚀 Server running → http://localhost:${PORT}`);
 });
