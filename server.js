@@ -58,7 +58,7 @@ app.post("/api/create-terminal-checkout", async (req, res) => {
     }
 
     // 注文を先に作成
-    const orderId = await createOrder(order);
+    const orderId = await createOrder(order, amountMoney);
 
     // Square Terminal Checkout 作成
     const checkoutResponse = await squareClient.terminal.checkouts.create({
@@ -255,7 +255,35 @@ app.get("/api/item-by-barcode/:barcode", async (req, res) => {
 // -----------------------------------------------------------------------------
 // 内部ユーティリティ
 // -----------------------------------------------------------------------------
-async function createOrder(orderData) {
+// 消費税（税込み 10%）のカタログ ID。起動中は 10 分だけ覚えておく
+const TAX_CACHE_MS = 10 * 60 * 1000;
+let standardTaxCache = null; // { id, fetchedAt }
+
+/**
+ * 注文にかける消費税を Square のカタログから探す。
+ * 有効な「税込み 10%」の税がちょうど 1 つあるときだけ使う。見つからない・決めきれないときは、
+ * 税なしや二重課税の注文を作らないようエラーにする。
+ */
+async function findStandardTaxId() {
+  if (standardTaxCache && Date.now() - standardTaxCache.fetchedAt < TAX_CACHE_MS) {
+    return standardTaxCache.id;
+  }
+  const taxIds = [];
+  for await (const obj of await squareClient.catalog.list({ types: "TAX" })) {
+    const tax = obj.taxData;
+    if (obj.type !== "TAX" || !obj.id || !tax || tax.enabled === false) continue;
+    if (tax.inclusionType === "INCLUSIVE" && Number(tax.percentage) === 10) {
+      taxIds.push(obj.id);
+    }
+  }
+  if (taxIds.length !== 1) {
+    throw new Error("消費税（税込み 10%）の設定を Square のカタログから特定できませんでした");
+  }
+  standardTaxCache = { id: taxIds[0], fetchedAt: Date.now() };
+  return taxIds[0];
+}
+
+async function createOrder(orderData, amountMoney) {
   // Money.amount を bigint へ変換
   const normalizeLineItems = (items = []) => items.map((li) => {
     const money = li.basePriceMoney || {};
@@ -268,15 +296,26 @@ async function createOrder(orderData) {
     };
   });
 
+  // API で作る注文にはカタログの税が自動では付かないので、消費税を明示して載せる。
+  // 税込み（INCLUSIVE）の税なので、注文の合計は変わらず、内訳に消費税額が記録される。
+  // 税率ごとに 1 回だけ端数処理するよう、注文全体（ORDER スコープ）にかける。
+  const taxId = await findStandardTaxId();
+
   const response = await squareClient.orders.create({
     order: {
       locationId: SQUARE_LOCATION_ID,
       lineItems: normalizeLineItems(orderData.lineItems),
+      taxes: [{ uid: "standard-tax", catalogObjectId: taxId, scope: "ORDER" }],
     },
     idempotencyKey: randomUUID(),
   });
   if (!response.order?.id) {
     throw new Error("Order ID が取得できませんでした");
+  }
+  // 税を載せても請求額が変わっていないことを確かめる（食い違ったまま端末に請求を出さない）
+  const orderTotal = response.order.totalMoney?.amount;
+  if (orderTotal == null || BigInt(orderTotal) !== BigInt(amountMoney.amount)) {
+    throw new Error("注文の合計と請求額が一致しません");
   }
   return response.order.id;
 }
